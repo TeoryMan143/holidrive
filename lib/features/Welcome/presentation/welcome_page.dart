@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:holidrive/core/constants.dart';
+import 'package:holidrive/features/Welcome/presentation/steps.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -7,13 +8,13 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Colors.transparent,
         toolbarHeight: 90,
         title: Image.asset(
           Constants.logoText,
-          width: 230,
+          width: 250,
         ),
       ),
       body: const WelcomeStepper(),
@@ -31,12 +32,15 @@ class WelcomeStepper extends StatefulWidget {
 class _WelcomeStepperState extends State<WelcomeStepper> {
   var currentStep = 0;
 
-  List<Step> steps() => [const Step(title: Text(''), content: Placeholder())];
+  List<Step> steps() => [const Step(title: Text(''), content: StepOne())];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[Image.asset(Constants.logoMarker)],
+    return Center(
+      child: Stepper(
+        steps: steps(),
+        type: StepperType.horizontal,
+      ),
     );
   }
 }
