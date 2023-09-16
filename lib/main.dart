@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:holidrive/core/auth_repository.dart';
 import 'package:holidrive/core/lang/lang.dart';
 import 'package:holidrive/core/theme/theme.dart';
 import 'package:holidrive/core/use_case.dart';
-import 'package:holidrive/features/Authentication/presentation/sign_up.dart';
+import 'package:holidrive/features/Authentication/presentation/sign_in.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -13,6 +14,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Get.put(CoreState());
+  Get.put(AuthRepository());
   runApp(const MyApp());
 }
 
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
       title: 'Holidrive',
       theme: Themes.lightTheme,
       darkTheme: Themes.darkTheme,
-      home: const SignUpScreen(),
+      home: const SignInScreen(),
     );
   }
 }

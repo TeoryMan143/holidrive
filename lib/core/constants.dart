@@ -14,4 +14,8 @@ abstract class Constants {
   static const signupButton = 'signupButton';
   static const signupSec1 = 'signupSec1';
   static const signupSec2 = 'signupSec2';
+  static const signinGoogleButton = 'signinGoogleButton';
+  static const name = 'name';
+  static const fieldErrorMessage = 'fieldErrorMessage';
+  static const emailFieldError = 'emailFieldError';
 }

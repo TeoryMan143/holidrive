@@ -13,6 +13,10 @@ class Es {
         Constants.signupButton: 'Crear',
         Constants.signupSec1: '¿Ya tiene una cuenta?',
         Constants.signupSec2: 'Inicie Sesión',
-        Constants.signupTitle: 'Crear Cuenta'
+        Constants.signupTitle: 'Crear Cuenta',
+        Constants.signinGoogleButton: 'Iniciar Sesión con Google',
+        Constants.name: 'Nombre Completo',
+        Constants.fieldErrorMessage: 'Por favor introduce un',
+        Constants.emailFieldError: 'Por favor introduce un correo valido'
       };
 }

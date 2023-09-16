@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:holidrive/core/constants.dart';
-import 'package:holidrive/features/Welcome/presentation/widgets/text_field.dart';
+import 'package:holidrive/features/Authentication/presentation/sign_up.dart';
+import 'package:holidrive/features/Authentication/widgets/google_button.dart';
+import 'package:holidrive/features/Authentication/widgets/text_field.dart';
+import 'package:holidrive/features/Authentication/controller/use_cases.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final controller = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +25,7 @@ class LoginScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 60),
             child: Form(
+              key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -34,20 +46,30 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   FormTextField(
+                    controller: controller.email,
                     icon: Icons.email_outlined,
                     label: Constants.email.tr,
+                    email: true,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   FormTextField(
+                    password: true,
+                    controller: controller.password,
                     icon: Icons.lock_outline,
                     label: Constants.password.tr,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40, bottom: 20),
                     child: ElevatedButton(
-                      onPressed: () => '',
+                      onPressed: () {
+                        if (!_formKey.currentState!.validate()) {
+                          return;
+                        }
+                        controller.logInUserLocal(controller.email.text.trim(),
+                            controller.password.text.trim());
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.surface,
                         padding: const EdgeInsets.symmetric(
@@ -65,6 +87,7 @@ class LoginScreen extends StatelessWidget {
                       child: Text(Constants.loginButton.tr),
                     ),
                   ),
+                  GoogleSignInButton(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -75,7 +98,14 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                       TextButton(
-                        onPressed: () => '',
+                        onPressed: () {
+                          Get.off(
+                            () => const SignUpScreen(),
+                            transition: Transition.downToUp,
+                            duration: const Duration(milliseconds: 400),
+                          );
+                          controller.disposeControllers();
+                        },
                         child: Text(
                           Constants.loginSec2.tr,
                           style: const TextStyle(

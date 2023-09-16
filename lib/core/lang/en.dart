@@ -2,7 +2,7 @@ import 'package:holidrive/core/constants.dart';
 
 class En {
   Map<String, String> get messages => {
-        Constants.loginTitle: 'Log In',
+        Constants.loginTitle: 'Sign In',
         Constants.email: 'Email',
         Constants.password: 'Password',
         Constants.loginButton: 'Sign In',
@@ -13,6 +13,10 @@ class En {
         Constants.signupButton: 'Sign Up',
         Constants.signupSec1: 'Already have an account?',
         Constants.signupSec2: 'Log In',
-        Constants.signupTitle: 'Create Account'
+        Constants.signupTitle: 'Create Account',
+        Constants.signinGoogleButton: 'Sign In with Google',
+        Constants.name: 'Full Name',
+        Constants.fieldErrorMessage: 'Please enter some',
+        Constants.emailFieldError: 'Please enter a valid email'
       };
 }
