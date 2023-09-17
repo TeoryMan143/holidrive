@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:holidrive/core/auth_repository.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
 @JsonSerializable()
 class UserModel {
-  final String fullName, email, password, uid;
-  final int number;
+  final String fullName, email, uid;
+  final int? number;
   final bool mod;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -18,8 +19,7 @@ class UserModel {
     required this.email,
     this.mod = false,
     this.firebaseUser,
-    required this.number,
-    required this.password,
+    this.number,
     required this.uid,
   });
 
@@ -33,10 +33,10 @@ class UserModel {
   ) {
     final data = document.data();
     return UserModel(
+      firebaseUser: AuthRepository.instance.firebaseUser.value,
       fullName: data['fullName'],
       email: data['email'],
       number: data['number'],
-      password: data['password'],
       uid: data['uid'],
     );
   }

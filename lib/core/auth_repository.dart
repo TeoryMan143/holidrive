@@ -12,6 +12,8 @@ class AuthRepository extends GetxController {
 
   final _auth = FirebaseAuth.instance;
   final _store = FirebaseFirestore.instance;
+  final _db = FirebaseFirestore.instance;
+
   late final Rx<User?> firebaseUser;
 
   void _init(User? user) {
@@ -24,10 +26,10 @@ class AuthRepository extends GetxController {
 
   @override
   void onReady() {
-    super.onReady();
     firebaseUser = Rx<User?>(_auth.currentUser);
     firebaseUser.bindStream(_auth.userChanges());
     ever(firebaseUser, _init);
+    super.onReady();
   }
 
   Future<void> createUserWithEmailAndPassword(
@@ -41,7 +43,6 @@ class AuthRepository extends GetxController {
         uid: firebaseUser.value!.uid,
         fullName: fullName,
         email: email,
-        password: password,
         number: number,
         firebaseUser: firebaseUser.value,
       );
@@ -49,9 +50,7 @@ class AuthRepository extends GetxController {
         email: email,
         password: password,
       );
-      await _store.collection('Users').add(
-            user.toJson(),
-          );
+      await _store.collection('Users').add(user.toJson());
 
       user.firebaseUser == null
           ? Get.offAll(() => const SignInScreen())
@@ -73,21 +72,46 @@ class AuthRepository extends GetxController {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  Future<void> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-    // Once signed in, return the UserCredential
-    return await _auth.signInWithCredential(credential);
+      await _auth.signInWithCredential(credential);
+
+      final user = UserModel(
+        uid: firebaseUser.value!.uid,
+        fullName: googleUser!.displayName!,
+        email: googleUser.email,
+        firebaseUser: firebaseUser.value,
+      );
+
+      final query = await _db
+          .collection('Users')
+          .where(
+            'uid',
+            isEqualTo: AuthRepository.instance.firebaseUser.value?.uid,
+          )
+          .get();
+      final userData =
+          query.docs.map((e) => UserModel.fromSnapshot(e)).singleOrNull;
+
+      if (userData == null) {
+        await _store.collection('Users').add(user.toJson());
+      }
+
+      user.firebaseUser == null
+          ? Get.offAll(() => const SignInScreen())
+          : Get.offAll(() => const UserDev());
+    } catch (e) {
+      print('FirebaseAuth expeption $e');
+    }
   }
 }

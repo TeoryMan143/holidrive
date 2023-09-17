@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyACjAkRTiLITbBmp4nYn040lg0kELT4J44',
-    appId: '1:653144590124:android:ea5bfc96e7dfe70dd04e89',
+    appId: '1:653144590124:android:114e3b79be06cd56d04e89',
     messagingSenderId: '653144590124',
     projectId: 'holidrive-2da97',
     storageBucket: 'holidrive-2da97.appspot.com',
@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '653144590124',
     projectId: 'holidrive-2da97',
     storageBucket: 'holidrive-2da97.appspot.com',
+    androidClientId: '653144590124-0g121qjah93op1vugamuftocmogfj1iv.apps.googleusercontent.com',
     iosClientId: '653144590124-u4qpic5s3idisa9l4imcujbd048l6ls6.apps.googleusercontent.com',
     iosBundleId: 'com.example.holidrive',
   );

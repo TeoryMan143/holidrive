@@ -12,11 +12,10 @@ class AuthController extends GetxController {
   final number = TextEditingController();
   final _db = FirebaseFirestore.instance;
 
-  late final Rx<UserModel?> user;
+  late Rx<UserModel?>? user;
 
   @override
   void onReady() async {
-    super.onReady();
     final query = await _db
         .collection('Users')
         .where(
@@ -24,8 +23,10 @@ class AuthController extends GetxController {
           isEqualTo: AuthRepository.instance.firebaseUser.value?.uid,
         )
         .get();
-    final userData = query.docs.map((e) => UserModel.fromSnapshot(e)).single;
+    final userData =
+        query.docs.map((e) => UserModel.fromSnapshot(e)).singleOrNull;
     user = Rx<UserModel?>(userData);
+    super.onReady();
   }
 
   void registerUserLocal({
@@ -50,7 +51,7 @@ class AuthController extends GetxController {
     number.text = '';
   }
 
-  void signInWithGoogle() {
-    AuthRepository.instance.signInWithGoogle();
+  void signInWithGoogle() async {
+    await AuthRepository.instance.signInWithGoogle();
   }
 }

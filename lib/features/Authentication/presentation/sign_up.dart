@@ -130,11 +130,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () => Get.off(
-                          () => const SignInScreen(),
-                          transition: Transition.downToUp,
-                          duration: const Duration(milliseconds: 400),
-                        ),
+                        onPressed: () {
+                          Get.off(
+                            () => const SignInScreen(),
+                            transition: Transition.downToUp,
+                            duration: const Duration(milliseconds: 400),
+                          );
+                          controller.disposeControllers();
+                        },
                         child: Text(
                           Constants.signupSec2.tr,
                           style: const TextStyle(

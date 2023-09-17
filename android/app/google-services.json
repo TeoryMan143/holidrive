@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "653144590124-e2bpt7fggv63t8nmtdp6jstdnaovhcd9.apps.googleusercontent.com",
+          "client_id": "653144590124-0g121qjah93op1vugamuftocmogfj1iv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.holidrive",
+            "certificate_hash": "8fc8015b0ca945751cb6fd8c4d33448faa6ef541"
+          }
+        },
+        {
+          "client_id": "653144590124-92i3hh9pj3qsdloj16khkjcuu8l2a7cm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,8 +35,51 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "653144590124-e2bpt7fggv63t8nmtdp6jstdnaovhcd9.apps.googleusercontent.com",
+              "client_id": "653144590124-92i3hh9pj3qsdloj16khkjcuu8l2a7cm.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "653144590124-u4qpic5s3idisa9l4imcujbd048l6ls6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.holidrive"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653144590124:android:114e3b79be06cd56d04e89",
+        "android_client_info": {
+          "package_name": "com.taberna.holidrive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653144590124-92i3hh9pj3qsdloj16khkjcuu8l2a7cm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACjAkRTiLITbBmp4nYn040lg0kELT4J44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653144590124-92i3hh9pj3qsdloj16khkjcuu8l2a7cm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "653144590124-u4qpic5s3idisa9l4imcujbd048l6ls6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.holidrive"
+              }
             }
           ]
         }

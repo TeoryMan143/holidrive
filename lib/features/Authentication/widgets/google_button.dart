@@ -12,7 +12,7 @@ class GoogleSignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      onPressed: () => '',
+      onPressed: controller.signInWithGoogle,
       icon: FaIcon(
         FontAwesomeIcons.google,
         color: Theme.of(context).colorScheme.surface,
