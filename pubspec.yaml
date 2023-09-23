@@ -43,7 +43,6 @@ dependencies:
   font_awesome_flutter: ^10.5.0
   cloud_firestore: ^4.9.1
   json_annotation: ^4.8.1
-  email_validator: ^2.1.17
   google_sign_in: ^6.1.5
   firebase_storage: ^11.2.6
 

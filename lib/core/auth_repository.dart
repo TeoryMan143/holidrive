@@ -14,21 +14,18 @@ class AuthRepository extends GetxController {
   final _store = FirebaseFirestore.instance;
   final _db = FirebaseFirestore.instance;
 
-  late final Rx<User?> firebaseUser;
+  late Rx<User?> _firebaseUser;
+  User? get firebaseUser => _firebaseUser.value;
 
-  void _init(User? user) {
-    if (user == null) {
+  @override
+  void onReady() {
+    _firebaseUser = Rx<User?>(_auth.currentUser);
+    _firebaseUser.bindStream(_auth.userChanges());
+    if (_firebaseUser.value == null) {
       Get.offAll(() => const SignInScreen());
     } else {
       Get.to(() => const UserDev());
     }
-  }
-
-  @override
-  void onReady() {
-    firebaseUser = Rx<User?>(_auth.currentUser);
-    firebaseUser.bindStream(_auth.userChanges());
-    ever(firebaseUser, _init);
     super.onReady();
   }
 
@@ -39,22 +36,17 @@ class AuthRepository extends GetxController {
     int number,
   ) async {
     try {
-      final user = UserModel(
-        uid: firebaseUser.value!.uid,
-        fullName: fullName,
-        email: email,
-        number: number,
-        firebaseUser: firebaseUser.value,
-      );
       await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      final user = UserModel(
+        uid: _firebaseUser.value!.uid,
+        fullName: fullName,
+        email: email,
+        number: number,
+      );
       await _store.collection('Users').add(user.toJson());
-
-      user.firebaseUser == null
-          ? Get.offAll(() => const SignInScreen())
-          : Get.offAll(() => const UserDev());
     } on FirebaseAuthException catch (e) {
       Fluttertoast.showToast(msg: 'FirebaseAuth expeption ${e.message}');
     } on FirebaseException catch (e) {
@@ -87,29 +79,24 @@ class AuthRepository extends GetxController {
       await _auth.signInWithCredential(credential);
 
       final user = UserModel(
-        uid: firebaseUser.value!.uid,
+        uid: _firebaseUser.value!.uid,
         fullName: googleUser!.displayName!,
         email: googleUser.email,
-        firebaseUser: firebaseUser.value,
       );
 
       final query = await _db
           .collection('Users')
           .where(
             'uid',
-            isEqualTo: AuthRepository.instance.firebaseUser.value?.uid,
+            isEqualTo: _firebaseUser.value?.uid,
           )
           .get();
       final userData =
-          query.docs.map((e) => UserModel.fromSnapshot(e)).singleOrNull;
+          query.docs.map((e) => UserModel.fromJson(e.data())).singleOrNull;
 
       if (userData == null) {
         await _store.collection('Users').add(user.toJson());
       }
-
-      user.firebaseUser == null
-          ? Get.offAll(() => const SignInScreen())
-          : Get.offAll(() => const UserDev());
     } catch (e) {
       print('FirebaseAuth expeption $e');
     }

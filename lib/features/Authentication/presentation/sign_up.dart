@@ -62,6 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 12,
                   ),
                   FormTextField(
+                    password: true,
                     controller: controller.password,
                     label: Constants.password.tr,
                   ),

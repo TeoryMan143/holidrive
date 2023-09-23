@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:holidrive/core/lang/lang.dart';
 import 'package:holidrive/core/theme/theme.dart';
 import 'package:holidrive/core/use_case.dart';
-import 'package:holidrive/features/Authentication/presentation/sign_in.dart';
+import 'package:holidrive/features/Map/presentation/map_screen.dart';
 import 'firebase_options.dart';
 import 'package:holidrive/core/auth_repository.dart';
 
@@ -13,7 +13,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  Get.put(AuthRepository());
+  Get.put(AuthRepository(), permanent: true);
   Get.put(CoreState());
   runApp(const MyApp());
 }
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       title: 'Holidrive',
       theme: Themes.lightTheme,
       darkTheme: Themes.darkTheme,
-      home: const SignInScreen(),
+      home: const MapScreen(),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,9 +6,7 @@ import 'package:holidrive/core/constants.dart';
 class FormTextField extends StatelessWidget {
   final IconData? icon;
   final String label;
-  final bool numeric;
-  final bool email;
-  final bool password;
+  final bool numeric, email, password;
   final TextEditingController controller;
 
   const FormTextField({
@@ -41,7 +38,7 @@ class FormTextField extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return '${Constants.fieldErrorMessage.tr} $label';
         } else if (email) {
-          if (EmailValidator.validate(controller.text)) {
+          if (GetUtils.isEmail(controller.text)) {
             return null;
           }
           return Constants.emailFieldError.tr;
