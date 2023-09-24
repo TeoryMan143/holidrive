@@ -3,6 +3,18 @@ import 'package:get/get.dart';
 
 abstract class Themes {
   static final lightTheme = ThemeData(
+    searchBarTheme: const SearchBarThemeData(
+      shape: MaterialStatePropertyAll<OutlinedBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(14)),
+          side: BorderSide(color: Color(0xff19141E), width: 2),
+        ),
+      ),
+      padding: MaterialStatePropertyAll<EdgeInsets>(
+        EdgeInsets.symmetric(horizontal: 20.0),
+      ),
+      backgroundColor: MaterialStatePropertyAll(Color(0xffFEF3E6)),
+    ),
     scaffoldBackgroundColor: const Color(0xffFEF3E6),
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
@@ -16,6 +28,7 @@ abstract class Themes {
       onBackground: Color(0xff19141E),
       surface: Color(0xffFF914D),
       onSurface: Color(0xFFFFF6EC),
+      tertiary: Color(0xff515058),
     ),
     fontFamily: 'Catamaran',
     cardTheme: const CardTheme(
@@ -36,6 +49,18 @@ abstract class Themes {
     ),
   );
   static final darkTheme = ThemeData(
+    searchBarTheme: const SearchBarThemeData(
+      shape: MaterialStatePropertyAll<OutlinedBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(14)),
+          side: BorderSide(color: Color(0xffA29487), width: 2),
+        ),
+      ),
+      padding: MaterialStatePropertyAll<EdgeInsets>(
+        EdgeInsets.symmetric(horizontal: 20.0),
+      ),
+      backgroundColor: MaterialStatePropertyAll(Color(0xff19141E)),
+    ),
     scaffoldBackgroundColor: const Color(0xff19141E),
     colorScheme: const ColorScheme(
       brightness: Brightness.dark,
@@ -49,6 +74,7 @@ abstract class Themes {
       onBackground: Color(0xffA29487),
       surface: Color(0xffFF914D),
       onSurface: Color(0xff2E2435),
+      tertiary: Color(0xffFEF3E6),
     ),
     fontFamily: 'Catamaran',
     cardTheme: const CardTheme(
