@@ -2,6 +2,9 @@ abstract class Constants {
   static const logo = 'assets/core/logo.png';
   static const logoText = 'assets/core/logo-text.png';
   static const logoMarker = 'assets/core/marker-logo.png';
+}
+
+abstract class Messages {
   static const loginTitle = 'loginTitle';
   static const email = 'email';
   static const password = 'password';
@@ -18,4 +21,20 @@ abstract class Constants {
   static const name = 'name';
   static const fieldErrorMessage = 'fieldErrorMessage';
   static const emailFieldError = 'emailFieldError';
+  static const userNotFoundTit = 'userNotFound';
+  static const userNotFoundCont = 'userNotFoundCont';
+  static const wrongPassTit = 'wrongPassTit';
+  static const emailFoundTit = 'emailFound';
+  static const emailFoundCont = 'emailFoundCont';
+  static const passwordMatchTit = 'passwordMatch';
+  static const passwordMatchCont = 'passwordMatchCont';
+  static const numberFoundTit = 'numberFoundTit';
+  static const numberFoundCont = 'numberFoundCont';
+  static const weakPassTit = 'weakPassTit';
+  static const weakPassCont = 'weakPassCont';
+  static const navItem1 = 'navItem1';
+  static const navItem2 = 'navItem2';
+  static const navItem3 = 'navItem3';
+  static const navItem4 = 'navItem4';
+  static const navItem5 = 'navItem5';
 }
