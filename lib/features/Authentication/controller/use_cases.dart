@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:holidrive/core/auth_repository.dart';
+import 'package:holidrive/core/controllers/auth_repository.dart';
+import 'package:holidrive/core/controllers/storage_controller.dart';
 import 'package:holidrive/features/Authentication/models/user_model.dart';
 import 'package:holidrive/features/Authentication/presentation/sign_in.dart';
-import 'package:holidrive/features/Authentication/presentation/user_dev.dart';
+import 'package:holidrive/features/Map/presentation/map_screen.dart';
 
 class AuthController extends GetxController {
   final name = TextEditingController();
@@ -17,6 +18,7 @@ class AuthController extends GetxController {
   final _db = FirebaseFirestore.instance;
   final _auth = AuthRepository.instance;
   final _fbInst = FirebaseAuth.instance;
+  final _storage = StorageRepository.instance;
 
   Rx<UserModel?>? _user;
   UserModel? get user => _user != null ? _user!.value : null;
@@ -31,18 +33,30 @@ class AuthController extends GetxController {
     await getUserData();
   }
 
-  Future<void> getUserData() async {
+  Future<void> upload() async {
+    _storage.uploadProfilePicture(
+      'sisas',
+      'https://i.imgur.com/VNsrZfG.png',
+    );
+  }
+
+  Future<void> getUserData({bool navigate = false}) async {
     _isLoading(true);
-    final query = await _db
-        .collection('Users')
-        .where(
-          'uid',
-          isEqualTo: _auth.firebaseUser?.uid,
-        )
-        .get();
-    final userData =
-        query.docs.map((e) => UserModel.fromJson(e.data())).singleOrNull;
-    _user = Rx<UserModel?>(userData);
+    if (_auth.firebaseUser != null) {
+      final query = await _db
+          .collection('Users')
+          .where(
+            'uid',
+            isEqualTo: _auth.firebaseUser?.uid,
+          )
+          .get();
+      final userData =
+          query.docs.map((e) => UserModel.fromJson(e.data())).singleOrNull;
+      _user = Rx<UserModel?>(userData);
+      if (navigate) {
+        Get.offAll(() => MapScreen());
+      }
+    }
     _isLoading(false);
   }
 
@@ -58,35 +72,12 @@ class AuthController extends GetxController {
       password,
       number,
     );
-    if (_auth.firebaseUser != null) {
-      _user = Rx<UserModel?>(
-        UserModel(
-          fullName: fullName,
-          email: email,
-          uid: _auth.firebaseUser!.uid,
-        ),
-      );
-      Get.offAll(() => UserDev());
-    }
+    await getUserData(navigate: true);
   }
 
   void logInUserLocal(String email, String password) async {
     await _auth.signInWithUserAndPassword(email, password);
-    if (_auth.firebaseUser != null) {
-      _isLoading(true);
-      final query = await _db
-          .collection('Users')
-          .where(
-            'uid',
-            isEqualTo: _auth.firebaseUser?.uid,
-          )
-          .get();
-      final userData =
-          query.docs.map((e) => UserModel.fromJson(e.data())).singleOrNull;
-      _user = userData.obs;
-      Get.to(() => UserDev());
-    }
-    _isLoading(false);
+    await getUserData(navigate: true);
   }
 
   void disposeControllers() {
@@ -99,23 +90,11 @@ class AuthController extends GetxController {
 
   void signInWithGoogle() async {
     await _auth.signInWithGoogle();
-    if (_auth.firebaseUser != null) {
-      final query = await _db
-          .collection('Users')
-          .where(
-            'uid',
-            isEqualTo: _auth.firebaseUser?.uid,
-          )
-          .get();
-      final userData =
-          query.docs.map((e) => UserModel.fromJson(e.data())).singleOrNull;
-      _user = userData.obs;
-      Get.offAll(() => UserDev());
-    }
+    await getUserData(navigate: true);
   }
 
   void logOut() {
-    Get.to(() => const SignInScreen());
+    Get.offAll(() => const SignInScreen());
     _user = Rx<UserModel?>(null);
     _fbInst.signOut();
   }

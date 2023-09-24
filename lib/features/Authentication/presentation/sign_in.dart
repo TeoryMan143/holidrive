@@ -38,7 +38,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 15, bottom: 48),
                     child: Text(
-                      Constants.loginTitle.tr,
+                      Messages.loginTitle.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                             fontSize: 35,
@@ -48,7 +48,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   FormTextField(
                     controller: controller.email,
                     icon: Icons.email_outlined,
-                    label: Constants.email.tr,
+                    label: Messages.email.tr,
                     email: true,
                   ),
                   const SizedBox(
@@ -58,7 +58,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     password: true,
                     controller: controller.password,
                     icon: Icons.lock_outline,
-                    label: Constants.password.tr,
+                    label: Messages.password.tr,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40, bottom: 20),
@@ -84,7 +84,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             .labelLarge!
                             .copyWith(fontSize: 18),
                       ),
-                      child: Text(Constants.loginButton.tr),
+                      child: Text(Messages.loginButton.tr),
                     ),
                   ),
                   GoogleSignInButton(),
@@ -92,14 +92,14 @@ class _SignInScreenState extends State<SignInScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        Constants.loginSec1.tr,
+                        Messages.loginSec1.tr,
                         style: const TextStyle(
                           fontSize: 16,
                         ),
                       ),
                       TextButton(
                         onPressed: () {
-                          Get.off(
+                          Get.offAll(
                             () => const SignUpScreen(),
                             transition: Transition.downToUp,
                             duration: const Duration(milliseconds: 400),
@@ -107,7 +107,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           controller.disposeControllers();
                         },
                         child: Text(
-                          Constants.loginSec2.tr,
+                          Messages.loginSec2.tr,
                           style: const TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 16,

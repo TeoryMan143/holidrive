@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:holidrive/core/constants.dart';
 import 'package:holidrive/features/Authentication/presentation/sign_in.dart';
+import 'package:holidrive/features/Authentication/widgets/error_dialog.dart';
 import 'package:holidrive/features/Authentication/widgets/google_button.dart';
 import 'package:holidrive/features/Authentication/widgets/text_field.dart';
 import 'package:holidrive/features/Authentication/controller/use_cases.dart';
@@ -39,7 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 10, bottom: 40),
                     child: Text(
-                      Constants.signupTitle.tr,
+                      Messages.signupTitle.tr,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                             fontSize: 30,
@@ -48,14 +49,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   FormTextField(
                     controller: controller.name,
-                    label: Constants.name.tr,
+                    label: Messages.name.tr,
                   ),
                   const SizedBox(
                     height: 12,
                   ),
                   FormTextField(
                     controller: controller.email,
-                    label: Constants.email.tr,
+                    label: Messages.email.tr,
                     email: true,
                   ),
                   const SizedBox(
@@ -64,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   FormTextField(
                     password: true,
                     controller: controller.password,
-                    label: Constants.password.tr,
+                    label: Messages.password.tr,
                   ),
                   const SizedBox(
                     height: 12,
@@ -72,14 +73,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   FormTextField(
                     password: true,
                     controller: controller.confrimPassword,
-                    label: Constants.confPassword.tr,
+                    label: Messages.confPassword.tr,
                   ),
                   const SizedBox(
                     height: 12,
                   ),
                   FormTextField(
                     controller: controller.number,
-                    label: Constants.number.tr,
+                    label: Messages.number.tr,
                     numeric: true,
                   ),
                   const SizedBox(
@@ -93,15 +94,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           return;
                         }
 
-                        if (controller.password.text.trim() ==
+                        if (controller.password.text.trim() !=
                             controller.confrimPassword.text.trim()) {
-                          controller.registerUserLocal(
-                            fullName: controller.name.text.trim(),
-                            email: controller.email.text.trim(),
-                            password: controller.password.text.trim(),
-                            number: int.parse(controller.number.text.trim()),
+                          errorDialog(
+                            title: Messages.passwordMatchTit.tr,
+                            body: Messages.passwordMatchCont.tr,
                           );
+                          return;
                         }
+                        controller.registerUserLocal(
+                          fullName: controller.name.text.trim(),
+                          email: controller.email.text.trim(),
+                          password: controller.password.text.trim(),
+                          number: int.parse(controller.number.text.trim()),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -117,7 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             .labelLarge!
                             .copyWith(fontSize: 18),
                       ),
-                      child: Text(Constants.signupButton.tr),
+                      child: Text(Messages.signupButton.tr),
                     ),
                   ),
                   GoogleSignInButton(),
@@ -125,14 +131,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        Constants.signupSec1.tr,
+                        Messages.signupSec1.tr,
                         style: const TextStyle(
                           fontSize: 16,
                         ),
                       ),
                       TextButton(
                         onPressed: () {
-                          Get.off(
+                          Get.offAll(
                             () => const SignInScreen(),
                             transition: Transition.downToUp,
                             duration: const Duration(milliseconds: 400),
@@ -140,7 +146,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller.disposeControllers();
                         },
                         child: Text(
-                          Constants.signupSec2.tr,
+                          Messages.signupSec2.tr,
                           style: const TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 16,

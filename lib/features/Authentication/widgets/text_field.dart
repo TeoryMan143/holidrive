@@ -36,12 +36,12 @@ class FormTextField extends StatelessWidget {
       // ignore: body_might_complete_normally_nullable
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return '${Constants.fieldErrorMessage.tr} $label';
+          return '${Messages.fieldErrorMessage.tr} $label';
         } else if (email) {
           if (GetUtils.isEmail(controller.text)) {
             return null;
           }
-          return Constants.emailFieldError.tr;
+          return Messages.emailFieldError.tr;
         }
         return null;
       },

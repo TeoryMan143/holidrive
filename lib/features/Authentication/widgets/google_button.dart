@@ -17,7 +17,7 @@ class GoogleSignInButton extends StatelessWidget {
         FontAwesomeIcons.google,
         color: Theme.of(context).colorScheme.surface,
       ),
-      label: Text(Constants.signinGoogleButton.tr),
+      label: Text(Messages.signinGoogleButton.tr),
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).colorScheme.onSurface,
         padding: const EdgeInsets.symmetric(
