@@ -112,6 +112,7 @@ class AuthRepository extends GetxController {
         uid: _firebaseUser.value!.uid,
         fullName: googleUser!.displayName!,
         email: googleUser.email,
+        profilePicture: googleUser.photoUrl,
       );
 
       final userData = await getUserDataWithUid(_firebaseUser.value!.uid);

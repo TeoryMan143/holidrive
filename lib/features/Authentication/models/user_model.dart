@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:holidrive/core/auth_repository.dart';
+import 'package:holidrive/core/controllers/auth_repository.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
@@ -12,7 +12,7 @@ class UserModel {
   final bool mod;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  final User firebaseUser = AuthRepository.instance.firebaseUser!;
+  final User? firebaseUser = AuthRepository.instance.firebaseUser;
 
   UserModel({
     required this.fullName,

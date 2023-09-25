@@ -24,6 +24,9 @@ class UserDev extends StatelessWidget {
                       ),
                       ElevatedButton(
                           onPressed: controller.logOut,
+                          child: const Text('salir')),
+                      ElevatedButton(
+                          onPressed: controller.upload,
                           child: const Text('salir'))
                     ],
                   ),

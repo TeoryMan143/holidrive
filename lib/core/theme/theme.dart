@@ -71,7 +71,7 @@ abstract class Themes {
       error: Colors.red,
       onError: Color(0xffffffff),
       background: Color(0xff19141E),
-      onBackground: Color(0xffA29487),
+      onBackground: Color(0xFFF5E2D2),
       surface: Color(0xffFF914D),
       onSurface: Color(0xff2E2435),
       tertiary: Color(0xffFEF3E6),

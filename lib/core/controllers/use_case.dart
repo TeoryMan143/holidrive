@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CoreState extends GetxController {
   late SharedPreferences pref;
 
+  late Rx<ThemeMode> _themeMode;
+  ThemeMode get themeMode => _themeMode.value;
+
   @override
   void onReady() async {
     super.onReady();
@@ -15,17 +18,25 @@ class CoreState extends GetxController {
     switch (theme) {
       case 'ThemeMode.dark':
         Get.changeThemeMode(ThemeMode.dark);
+        _themeMode = Rx<ThemeMode>(ThemeMode.dark);
         break;
       case 'ThemeMode.light':
         Get.changeThemeMode(ThemeMode.light);
+        _themeMode = Rx<ThemeMode>(ThemeMode.light);
+
         break;
       default:
         Get.changeThemeMode(ThemeMode.system);
+        _themeMode = Rx<ThemeMode>(ThemeMode.system);
     }
   }
 
-  Future<void> changeThemeMode(ThemeMode themeMode) async {
+  void changeThemeMode(ThemeMode? themeMode) {
+    if (themeMode == null) {
+      return;
+    }
     Get.changeThemeMode(themeMode);
+    _themeMode = Rx<ThemeMode>(themeMode);
     pref.setString('theme', themeMode.toString());
   }
 }

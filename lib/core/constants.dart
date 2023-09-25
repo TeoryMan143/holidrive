@@ -37,4 +37,11 @@ abstract class Messages {
   static const navItem3 = 'navItem3';
   static const navItem4 = 'navItem4';
   static const navItem5 = 'navItem5';
+  static const yourProfile = 'yourProfile';
+  static const editProfile = 'editProfile';
+  static const theme = 'theme';
+  static const logOut = 'logOut';
+  static const light = 'light';
+  static const dark = 'dark';
+  static const system = 'system';
 }
