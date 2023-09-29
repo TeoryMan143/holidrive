@@ -46,5 +46,17 @@ class En {
         Messages.dark: 'Dark',
         Messages.light: 'Light',
         Messages.system: 'System',
+        Messages.editUserInfo: 'Edit User Information',
+        Messages.whatToReport: 'What will you report? *',
+        Messages.whereToReport: 'Where? *',
+        Messages.description: 'Description',
+        Messages.evidence: 'Evidence *',
+        Messages.publishButton: 'Publish',
+        Messages.holeHint: 'Hole',
+        Messages.workHint: 'Road work',
+        Messages.dangerHint: 'Dangerous zone',
+        Messages.seeMore: 'See more',
+        Messages.addPictures: 'Add pictures',
+        Messages.curretLocationLabel: 'Current location',
       };
 }

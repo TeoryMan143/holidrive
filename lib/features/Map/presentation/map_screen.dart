@@ -1,3 +1,4 @@
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -5,53 +6,72 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:holidrive/core/loading_screen.dart';
 import 'package:holidrive/features/Map/controller/use_cases.dart';
 import 'package:holidrive/core/constants.dart';
+import 'package:holidrive/features/Map/models/report_info_model.dart';
+import 'package:holidrive/features/Map/widgets/custom_search_bar.dart';
 
 class MapScreen extends StatelessWidget {
   MapScreen({super.key});
 
-  final _controller = Get.put(MapController());
+  final _mapController = Get.put(MapController());
+
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => _controller.loading
+      () => _mapController.isLoading
           ? const LoadingScreen()
           : Scaffold(
               body: Stack(
-                children: [
-                  GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: _controller.deviceLocation,
-                      zoom: 16,
-                    ),
-                    markers: {
-                      Marker(
-                        markerId: const MarkerId('sisas'),
-                        position: _controller.deviceLocation,
-                      )
+                children: <Widget>[
+                  FutureBuilder<Marker>(
+                    future: ReportInfoModel(
+                      coordinates: const LatLng(3.492740, -76.494567),
+                      description: 'Tu mamá me la mama',
+                      id: 'sisas',
+                      location: 'Calle del sex',
+                      type: ReportType.hole,
+                      imagesId: 'si',
+                    ).toMarker(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      return GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: _mapController.deviceLocation,
+                          zoom: 16,
+                        ),
+                        markers: {
+                          snapshot.data!,
+                        },
+                        onMapCreated: (controller) {
+                          _mapController.windowController.googleMapController =
+                              controller;
+                        },
+                        onCameraMove: (position) {
+                          _mapController.windowController.onCameraMove!();
+                        },
+                        onTap: (argument) {
+                          _mapController.windowController.hideInfoWindow!();
+                        },
+                      );
                     },
                   ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: SearchAnchor(
-                      builder: (context, controller) => SafeArea(
+                  const Align(
+                      alignment: Alignment.topCenter,
+                      child: SafeArea(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 25,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 15,
                           ),
-                          child: SearchBar(
-                            controller: controller,
-                            leading: Icon(
-                              Icons.search_sharp,
-                              color: Theme.of(context).colorScheme.onBackground,
-                              size: 28,
-                            ),
-                          ),
+                          child: CustomSearchBar(),
                         ),
-                      ),
-                      suggestionsBuilder: (_, __) => [Text('')],
-                    ),
-                  ),
+                      )),
+                  CustomInfoWindow(
+                    controller: _mapController.windowController,
+                    height: 300,
+                    width: 300,
+                  )
                 ],
               ),
               bottomNavigationBar: SizedBox(
@@ -64,50 +84,51 @@ class MapScreen extends StatelessWidget {
                   selectedLabelStyle:
                       const TextStyle(fontFamily: 'Poppins', fontSize: 13),
                   showUnselectedLabels: true,
-                  currentIndex: _controller.navIndex,
+                  currentIndex: _mapController.navIndex,
                   selectedItemColor: Theme.of(context).colorScheme.surface,
                   unselectedItemColor: Theme.of(context).colorScheme.tertiary,
-                  onTap: _controller.handleNavBarTap,
+                  onTap: _mapController.handleNavBarTap,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
-                        icon: const Icon(
-                          Icons.house_sharp,
-                          size: 32,
-                        ),
-                        label: Messages.navItem1.tr,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.background),
+                      icon: const Icon(
+                        Icons.house_sharp,
+                        size: 32,
+                      ),
+                      label: Messages.navItem1.tr,
+                      backgroundColor: Theme.of(context).colorScheme.background,
+                    ),
                     BottomNavigationBarItem(
                       icon: const FaIcon(
                         FontAwesomeIcons.locationDot,
                         size: 28,
                       ),
                       label: Messages.navItem2.tr,
+                      backgroundColor: Theme.of(context).colorScheme.background,
                     ),
                     BottomNavigationBarItem(
-                        icon: const Icon(
-                          Icons.remove_red_eye,
-                          size: 32,
-                        ),
-                        label: Messages.navItem3.tr,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.background),
+                      icon: const Icon(
+                        Icons.remove_red_eye,
+                        size: 32,
+                      ),
+                      label: Messages.navItem3.tr,
+                      backgroundColor: Theme.of(context).colorScheme.background,
+                    ),
                     BottomNavigationBarItem(
-                        icon: const FaIcon(
-                          FontAwesomeIcons.pencil,
-                          size: 28,
-                        ),
-                        label: Messages.navItem4.tr,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.background),
+                      icon: const FaIcon(
+                        FontAwesomeIcons.pencil,
+                        size: 28,
+                      ),
+                      label: Messages.navItem4.tr,
+                      backgroundColor: Theme.of(context).colorScheme.background,
+                    ),
                     BottomNavigationBarItem(
-                        icon: const FaIcon(
-                          FontAwesomeIcons.userLarge,
-                          size: 32,
-                        ),
-                        label: Messages.navItem5.tr,
-                        backgroundColor:
-                            Theme.of(context).colorScheme.background),
+                      icon: const FaIcon(
+                        FontAwesomeIcons.userLarge,
+                        size: 32,
+                      ),
+                      label: Messages.navItem5.tr,
+                      backgroundColor: Theme.of(context).colorScheme.background,
+                    ),
                   ],
                 ),
               ),

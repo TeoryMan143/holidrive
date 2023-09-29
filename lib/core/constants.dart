@@ -2,6 +2,13 @@ abstract class Constants {
   static const logo = 'assets/core/logo.png';
   static const logoText = 'assets/core/logo-text.png';
   static const logoMarker = 'assets/core/marker-logo.png';
+  static const dangerZoneMargerImg = 'assets/map/danger-zone-marker.png';
+  static const holeMarkerImg = 'assets/map/hole-marker.png';
+  static const roadWorkMarkerImg = 'assets/map/road-work-marker.png';
+  static const holeIcon = 'assets/core/hole-icon.svg';
+  static const roadWorkIcon = 'assets/core/tools.svg';
+  static const dangerIcon = 'assets/core/danger.svg';
+  static const defaultPfp = 'assets/core/DEFAULT_PFP.png';
 }
 
 abstract class Messages {
@@ -44,4 +51,17 @@ abstract class Messages {
   static const light = 'light';
   static const dark = 'dark';
   static const system = 'system';
+  static const editUserInfo = 'editUserInfo';
+  static const whatToReport = 'whatToReport';
+  static const whereToReport = 'whereToReport';
+  static const description = 'description';
+  static const evidence = 'evidence';
+  static const selectPicture = 'selectPicture';
+  static const publishButton = 'publishButton';
+  static const holeHint = 'holeHint';
+  static const workHint = 'workHint';
+  static const dangerHint = 'dangerHint';
+  static const seeMore = 'seeMore';
+  static const addPictures = 'addPictures';
+  static const curretLocationLabel = 'curretLocationLabel';
 }

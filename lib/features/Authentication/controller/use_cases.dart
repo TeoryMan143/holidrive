@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:holidrive/core/controllers/auth_repository.dart';
-import 'package:holidrive/core/controllers/storage_controller.dart';
 import 'package:holidrive/features/Authentication/models/user_model.dart';
 import 'package:holidrive/features/Authentication/presentation/sign_in.dart';
 import 'package:holidrive/features/Map/presentation/map_screen.dart';
@@ -18,7 +17,6 @@ class AuthController extends GetxController {
   final _db = FirebaseFirestore.instance;
   final _auth = AuthRepository.instance;
   final _fbInst = FirebaseAuth.instance;
-  final _storage = StorageRepository.instance;
 
   Rx<UserModel?>? _user;
   UserModel? get user => _user != null ? _user!.value : null;
@@ -31,13 +29,6 @@ class AuthController extends GetxController {
     super.onReady();
     disposeControllers();
     await getUserData();
-  }
-
-  Future<void> upload() async {
-    _storage.uploadProfilePicture(
-      'sisas',
-      'https://i.imgur.com/VNsrZfG.png',
-    );
   }
 
   Future<void> getUserData({bool navigate = false}) async {

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:holidrive/core/constants.dart';
 import 'package:holidrive/core/controllers/use_case.dart';
 import 'package:holidrive/features/Authentication/controller/use_cases.dart';
+import 'package:holidrive/features/Map/presentation/edit_profile_screen.dart';
 import 'package:holidrive/features/Map/widgets/profile_option.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -66,36 +67,32 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        CircleAvatar(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          radius: 55,
-                          child: _authController.user?.profilePicture == null
-                              ? FaIcon(
-                                  FontAwesomeIcons.userLarge,
-                                  size: 60,
-                                  color:
-                                      Theme.of(context).colorScheme.background,
-                                )
-                              : Container(
-                                  width: 100.0,
-                                  height: 100.0,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff7c94b6),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        _authController.user!.profilePicture!,
-                                      ),
-                                      fit: BoxFit.cover,
+                        _authController.user?.profilePicture == null
+                            ? FaIcon(
+                                FontAwesomeIcons.userLarge,
+                                size: 60,
+                                color: Theme.of(context).colorScheme.background,
+                              )
+                            : Container(
+                                width: 100.0,
+                                height: 100.0,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff7c94b6),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      _authController.user!.profilePicture!,
                                     ),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(50.0)),
-                                    border: Border.all(
-                                      width: 3.0,
-                                    ),
+                                    fit: BoxFit.cover,
                                   ),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(50.0)),
+                                  border: Border.all(
+                                      width: 3.0,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
                                 ),
-                        )
+                              )
                       ],
                     ),
             ),
@@ -103,6 +100,13 @@ class ProfileScreen extends StatelessWidget {
             ProfileOption(
               icon: FontAwesomeIcons.userPen,
               title: Messages.editProfile.tr,
+              onTap: () {
+                Get.to(
+                  () => EditProfileScreen(),
+                  transition: Transition.rightToLeftWithFade,
+                  duration: const Duration(milliseconds: 400),
+                );
+              },
             ),
             Divider(
               color: Theme.of(context).colorScheme.surface,

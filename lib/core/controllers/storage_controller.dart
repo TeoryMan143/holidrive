@@ -8,9 +8,12 @@ class StorageRepository extends GetxController {
 
   final _storageRef = FirebaseStorage.instance.ref();
 
-  void uploadProfilePicture(String fileName, String filePath) async {
-    final profilePictureRef =
-        _storageRef.child('profilePictures/${fileName}pf.jpg');
+  Future<void> uploadFile(
+    String fileName,
+    String filePath,
+    String parentFolder,
+  ) async {
+    final profilePictureRef = _storageRef.child('profilePictures/$fileName');
     final file = File(filePath);
 
     try {

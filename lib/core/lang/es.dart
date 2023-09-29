@@ -46,5 +46,16 @@ class Es {
         Messages.dark: 'Oscuro',
         Messages.light: 'Claro',
         Messages.system: 'Sistema',
+        Messages.editUserInfo: 'Editar Información del Usuario',
+        Messages.whatToReport: '¿Qué vas a reportar? *',
+        Messages.whereToReport: '¿Dónde? *',
+        Messages.description: 'Descripción',
+        Messages.evidence: 'Evidencia *',
+        Messages.holeHint: 'Hueco',
+        Messages.workHint: 'Obra',
+        Messages.dangerHint: 'Zona peligrosa',
+        Messages.seeMore: 'Ver más',
+        Messages.addPictures: 'Añadir fotos',
+        Messages.curretLocationLabel: 'Ubicación actual',
       };
 }

@@ -8,6 +8,7 @@ class FormTextField extends StatelessWidget {
   final String label;
   final bool numeric, email, password;
   final TextEditingController controller;
+  final String? initialValue;
 
   const FormTextField({
     super.key,
@@ -17,11 +18,13 @@ class FormTextField extends StatelessWidget {
     this.email = false,
     this.password = false,
     required this.controller,
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       obscureText: password,
       textAlignVertical: TextAlignVertical.center,
       controller: controller,

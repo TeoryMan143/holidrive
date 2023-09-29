@@ -16,11 +16,10 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final controller = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AuthController());
-
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -74,14 +73,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     password: true,
                     controller: controller.confrimPassword,
                     label: Messages.confPassword.tr,
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  FormTextField(
-                    controller: controller.number,
-                    label: Messages.number.tr,
-                    numeric: true,
                   ),
                   const SizedBox(
                     height: 12,
