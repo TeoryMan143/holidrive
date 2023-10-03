@@ -9,12 +9,12 @@ class ReportPreview extends StatelessWidget {
   const ReportPreview({
     super.key,
     required this.displayImage,
-    required this.location,
+    required this.address,
     required this.description,
     required this.type,
   });
 
-  final String displayImage, location, description;
+  final String displayImage, address, description;
   final ReportType type;
 
   String _getHintIcon() {
@@ -86,7 +86,7 @@ class ReportPreview extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            location,
+                            address,
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class StorageRepository extends GetxController {
@@ -13,13 +14,13 @@ class StorageRepository extends GetxController {
     String filePath,
     String parentFolder,
   ) async {
-    final profilePictureRef = _storageRef.child('profilePictures/$fileName');
+    final profilePictureRef = _storageRef.child('$parentFolder/$fileName');
     final file = File(filePath);
 
     try {
       await profilePictureRef.putFile(file);
     } on FirebaseException catch (e) {
-      print('Failed with expeption ${e.message}, code ${e.code}');
+      debugPrint('Failed with expeption ${e.message}, code ${e.code}');
     }
   }
 }

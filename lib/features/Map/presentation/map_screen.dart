@@ -6,7 +6,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:holidrive/core/loading_screen.dart';
 import 'package:holidrive/features/Map/controller/use_cases.dart';
 import 'package:holidrive/core/constants.dart';
-import 'package:holidrive/features/Map/models/report_info_model.dart';
 import 'package:holidrive/features/Map/widgets/custom_search_bar.dart';
 
 class MapScreen extends StatelessWidget {
@@ -22,45 +21,32 @@ class MapScreen extends StatelessWidget {
           : Scaffold(
               body: Stack(
                 children: <Widget>[
-                  FutureBuilder<Marker>(
-                    future: ReportInfoModel(
-                      coordinates: const LatLng(3.492740, -76.494567),
-                      description: 'Tu mamá me la mama',
-                      id: 'sisas',
-                      location: 'Calle del sex',
-                      type: ReportType.hole,
-                      imagesId: 'si',
-                    ).toMarker(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
-                      return GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: _mapController.deviceLocation,
-                          zoom: 16,
-                        ),
-                        markers: {
-                          snapshot.data!,
-                        },
-                        onMapCreated: (controller) {
-                          _mapController.windowController.googleMapController =
-                              controller;
-                        },
-                        onCameraMove: (position) {
-                          _mapController.windowController.onCameraMove!();
-                        },
-                        onTap: (argument) {
-                          _mapController.windowController.hideInfoWindow!();
-                        },
-                      );
-                    },
+                  Obx(
+                    () => GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: _mapController.deviceLocation,
+                        zoom: 16,
+                      ),
+                      markers: _mapController.reports
+                          .map((report) => report.toMarker())
+                          .toSet(),
+                      onMapCreated: (controller) {
+                        _mapController.windowController.googleMapController =
+                            controller;
+                      },
+                      onCameraMove: (position) {
+                        _mapController.windowController.onCameraMove!();
+                      },
+                      onTap: (argument) {
+                        _mapController.windowController.hideInfoWindow!();
+                      },
+                    ),
                   ),
-                  const Align(
+                  Align(
                       alignment: Alignment.topCenter,
                       child: SafeArea(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 30,
                             vertical: 15,
                           ),

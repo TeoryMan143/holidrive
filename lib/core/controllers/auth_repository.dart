@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:holidrive/core/constants.dart';
@@ -121,7 +122,7 @@ class AuthRepository extends GetxController {
         await _store.collection('Users').add(user.toJson());
       }
     } catch (e) {
-      print('FirebaseAuth expeption $e');
+      debugPrint('FirebaseAuth expeption $e');
     }
   }
 

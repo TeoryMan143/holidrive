@@ -36,7 +36,9 @@ class ProfileOption extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 30),
-              SizedBox(height: 50, width: 100, child: action)
+              Flexible(
+                child: SizedBox(height: 50, width: 100, child: action),
+              ),
             ],
           ),
         ),

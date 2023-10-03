@@ -1,30 +1,31 @@
-import 'dart:ui' as ui;
-import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:holidrive/core/constants.dart';
+import 'package:holidrive/core/controllers/use_case.dart';
 import 'package:holidrive/features/Map/controller/use_cases.dart';
-import 'package:holidrive/features/Map/presentation/report_preview.dart';
+import 'package:holidrive/features/Map/widgets/report_preview.dart';
 
 class ReportInfoModel {
   final String description;
-  final String location;
+  final String address;
   final ReportType type;
   final LatLng coordinates;
   final String id;
-  final String imagesId;
+  final String userId;
+  final DateTime time;
 
   ReportInfoModel({
     required this.description,
-    required this.location,
+    required this.address,
     required this.type,
     required this.coordinates,
     required this.id,
-    required this.imagesId,
+    required this.userId,
+    required this.time,
   });
 
   final _mapInst = MapController.instance;
+  final _coreInst = CoreState.instance;
 
-  factory ReportInfoModel.fromJson(Map<String, dynamic> json) {
+  factory ReportInfoModel.fromJson(Map<dynamic, dynamic> json) {
     final ReportType type;
 
     switch (json['type']) {
@@ -41,43 +42,53 @@ class ReportInfoModel {
         type = ReportType.hole;
     }
 
-    final coords = LatLng(
-        json['coordinates']['latitude'], json['coordinates']['longitude']);
+    final coords =
+        LatLng(json['coordinates']['lat'], json['coordinates']['lng']);
 
     return ReportInfoModel(
       description: json['description'],
-      location: json['location'],
+      address: json['address'],
       type: type,
       coordinates: coords,
       id: json['id'],
-      imagesId: json['imagesId'],
+      userId: json['userId'],
+      time: DateTime.parse(json['time']),
     );
   }
 
-  Future<Uint8List> _getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-        .buffer
-        .asUint8List();
+  Map<String, dynamic> toJson() {
+    return {
+      'description': description,
+      'address': address,
+      'type': ({
+        ReportType.hole: 'hole',
+        ReportType.dangerZone: 'dangerZone',
+        ReportType.roadWork: 'roadWork',
+      }[type]),
+      'coordinates': {
+        'lat': coordinates.latitude,
+        'lng': coordinates.longitude
+      },
+      'id': id,
+      'userId': userId,
+      'time': time.toString(),
+    };
   }
 
-  Future<Marker> toMarker() async {
+  Marker toMarker() {
     late final BitmapDescriptor icon;
 
     if (type == ReportType.hole) {
       icon = BitmapDescriptor.fromBytes(
-        await _getBytesFromAsset(Constants.holeMarkerImg, 90),
+        _coreInst.holeMarkerIcon,
       );
     } else if (type == ReportType.roadWork) {
       icon = BitmapDescriptor.fromBytes(
-        await _getBytesFromAsset(Constants.roadWorkMarkerImg, 90),
+        _coreInst.roadWorkMarkerIcon,
       );
     } else if (type == ReportType.dangerZone) {
       icon = BitmapDescriptor.fromBytes(
-        await _getBytesFromAsset(Constants.dangerZoneMargerImg, 90),
+        _coreInst.dangerMarkerIcon,
       );
     }
 
@@ -90,9 +101,9 @@ class ReportInfoModel {
           ReportPreview(
             displayImage:
                 'https://www.cattipper.com/wp-content/uploads/2023/08/featured-Whats-the-Name-of-the-Cat-in-the-Smurfs.jpg',
-            location: location,
             description: description,
             type: type,
+            address: address,
           ),
           coordinates,
         );

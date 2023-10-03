@@ -2,13 +2,14 @@ abstract class Constants {
   static const logo = 'assets/core/logo.png';
   static const logoText = 'assets/core/logo-text.png';
   static const logoMarker = 'assets/core/marker-logo.png';
-  static const dangerZoneMargerImg = 'assets/map/danger-zone-marker.png';
+  static const dangerZoneMarkerImg = 'assets/map/danger-zone-marker.png';
   static const holeMarkerImg = 'assets/map/hole-marker.png';
   static const roadWorkMarkerImg = 'assets/map/road-work-marker.png';
   static const holeIcon = 'assets/core/hole-icon.svg';
   static const roadWorkIcon = 'assets/core/tools.svg';
   static const dangerIcon = 'assets/core/danger.svg';
   static const defaultPfp = 'assets/core/DEFAULT_PFP.png';
+  static const loadingGif = 'assets/map/loading.gif';
 }
 
 abstract class Messages {
@@ -64,4 +65,12 @@ abstract class Messages {
   static const seeMore = 'seeMore';
   static const addPictures = 'addPictures';
   static const curretLocationLabel = 'curretLocationLabel';
+  static const publishReportTit = 'publishReportTit';
+  static const noImagesTit = 'noImagesTit';
+  static const noImagesCont = 'noImagesCont';
+  static const overImagesTit = 'overImagesTit';
+  static const overImagesCont = 'overImagesCont';
+  static const addMoreImgs = 'addMoreImgs';
+  static const uploading = 'uploading';
+  static const uploadFinished = 'uploadFinished';
 }

@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:holidrive/core/constants.dart';
 import 'package:holidrive/features/Map/controller/use_cases.dart';
 
-class CustomSearchBar extends StatefulWidget {
-  const CustomSearchBar({
+class CustomSearchBar extends StatelessWidget {
+  CustomSearchBar({
     super.key,
     this.onChanged,
     this.controller,
@@ -12,18 +12,10 @@ class CustomSearchBar extends StatefulWidget {
     this.onFocus,
   });
 
-  final void Function(String)? onChanged;
+  final void Function(String value)? onChanged;
   final TextEditingController? controller;
   final bool locator;
   final void Function()? onFocus;
-
-  @override
-  State<CustomSearchBar> createState() => _CustomSearchBarState();
-}
-
-class _CustomSearchBarState extends State<CustomSearchBar> {
-  var tapped = false;
-  var fieldFocused = false;
 
   final _mapController = Get.put(MapController());
 
@@ -34,11 +26,23 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       children: <Widget>[
         Focus(
           onFocusChange: (hasFocus) {
-            setState(() {
-              fieldFocused = hasFocus;
-            });
+            _mapController.isSearchBarFocused = hasFocus;
+
+            if (onFocus != null) {
+              onFocus!();
+            }
+            if (locator &&
+                !hasFocus &&
+                _mapController.reportLocation !=
+                    _mapController.deviceLocation) {
+              _mapController.reportLocationController.text =
+                  _mapController.selectedLocationAdress!;
+            }
+            if (hasFocus) {
+              _mapController.reportLocationController.text = '';
+            }
           },
-          child: TextFormField(
+          child: TextField(
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.search_sharp),
               filled: true,
@@ -47,47 +51,28 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                 borderRadius: BorderRadius.all(Radius.circular(17)),
               ),
             ),
-            onChanged: widget.onChanged,
-            controller: widget.controller,
-            onTap: () {
-              setState(() {
-                tapped = true;
-              });
-            },
+            onChanged: onChanged,
+            controller: controller,
+            enableInteractiveSelection: true,
+            onTap: () {},
           ),
         ),
-        if (widget.locator)
-          if (!tapped)
-            Positioned(
-              top: -20,
-              child: Text(
-                Messages.curretLocationLabel.tr,
-                style: TextStyle(color: Theme.of(context).colorScheme.primary),
-              ),
-            ),
-        Builder(
-          builder: (context) {
-            if (fieldFocused) {
-              return Positioned(
-                child: Expanded(
-                    child: ListView.builder(
-                  itemCount: _mapController.reportQueryResults.length,
-                  itemBuilder: (context, index) {
-                    final address = _mapController.reportQueryResults[index];
-                    return ListTile(
-                      leading: Icon(
-                        Icons.location_on,
-                        color: Theme.of(context).colorScheme.surface,
+        Positioned(
+          top: -20,
+          child: Obx(
+            () => _mapController.isLoading
+                ? const CircularProgressIndicator()
+                : !locator ||
+                        _mapController.reportLocation !=
+                            _mapController.deviceLocation
+                    ? const SizedBox.shrink()
+                    : Text(
+                        Messages.curretLocationLabel.tr,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary),
                       ),
-                      title: const Text(''),
-                    );
-                  },
-                )),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        )
+          ),
+        ),
       ],
     );
   }

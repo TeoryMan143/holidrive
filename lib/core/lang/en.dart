@@ -58,5 +58,13 @@ class En {
         Messages.seeMore: 'See more',
         Messages.addPictures: 'Add pictures',
         Messages.curretLocationLabel: 'Current location',
+        Messages.publishReportTit: 'Make a report',
+        Messages.noImagesTit: 'No picture selected',
+        Messages.noImagesCont: 'Please select at least one picture.',
+        Messages.overImagesTit: 'Many images selected',
+        Messages.overImagesCont: 'You can select a maximum of 4 pictures.',
+        Messages.addMoreImgs: 'Add more',
+        Messages.uploading: 'Uploading report',
+        Messages.uploadFinished: 'Successfully uploaded',
       };
 }
