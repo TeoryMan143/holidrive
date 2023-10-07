@@ -5,6 +5,7 @@ import 'package:holidrive/core/constants.dart';
 import 'package:holidrive/core/controllers/use_case.dart';
 import 'package:holidrive/features/Authentication/controller/use_cases.dart';
 import 'package:holidrive/features/Map/presentation/edit_profile_screen.dart';
+import 'package:holidrive/features/Map/presentation/my_reports_screen.dart';
 import 'package:holidrive/features/Map/widgets/profile_option.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -91,10 +92,11 @@ class ProfileScreen extends StatelessWidget {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(50.0)),
                                   border: Border.all(
-                                      width: 3.0,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
+                                    width: 3.0,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground,
+                                  ),
                                 ),
                               )
                       ],
@@ -102,11 +104,29 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 80),
             ProfileOption(
+              icon: FontAwesomeIcons.pencil,
+              title: Messages.myReports.tr,
+              onTap: () {
+                Get.to(
+                  () => MyReportsScreen(),
+                  transition: Transition.rightToLeftWithFade,
+                  duration: const Duration(milliseconds: 400),
+                );
+              },
+            ),
+            Divider(
+              color: Theme.of(context).colorScheme.surface,
+              thickness: 2,
+              indent: 10,
+              endIndent: 10,
+              height: 30,
+            ),
+            ProfileOption(
               icon: FontAwesomeIcons.userPen,
               title: Messages.editProfile.tr,
               onTap: () {
                 Get.to(
-                  () => EditProfileScreen(),
+                  () => const EditProfileScreen(),
                   transition: Transition.rightToLeftWithFade,
                   duration: const Duration(milliseconds: 400),
                 );

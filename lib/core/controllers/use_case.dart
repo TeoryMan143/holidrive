@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
-import 'package:flutter/services.dart';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:holidrive/core/constants.dart';
@@ -61,7 +61,8 @@ class CoreState extends GetxController {
       return;
     }
     Get.changeThemeMode(themeMode);
-    _themeMode = Rx<ThemeMode>(themeMode);
+    _themeMode.value = themeMode;
     pref.setString('theme', themeMode.toString());
+    update();
   }
 }

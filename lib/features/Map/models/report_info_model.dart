@@ -5,6 +5,7 @@ import 'package:holidrive/features/Map/widgets/report_preview.dart';
 
 class ReportInfoModel {
   final String description;
+  final String name;
   final String address;
   final ReportType type;
   final LatLng coordinates;
@@ -20,6 +21,7 @@ class ReportInfoModel {
     required this.id,
     required this.userId,
     required this.time,
+    required this.name,
   });
 
   final _mapInst = MapController.instance;
@@ -47,6 +49,7 @@ class ReportInfoModel {
 
     return ReportInfoModel(
       description: json['description'],
+      name: json['name'],
       address: json['address'],
       type: type,
       coordinates: coords,
@@ -72,6 +75,7 @@ class ReportInfoModel {
       'id': id,
       'userId': userId,
       'time': time.toString(),
+      'name': name,
     };
   }
 
@@ -98,13 +102,7 @@ class ReportInfoModel {
       position: coordinates,
       onTap: () {
         _mapInst.windowController.addInfoWindow!(
-          ReportPreview(
-            displayImage:
-                'https://www.cattipper.com/wp-content/uploads/2023/08/featured-Whats-the-Name-of-the-Cat-in-the-Smurfs.jpg',
-            description: description,
-            type: type,
-            address: address,
-          ),
+          ReportPreview(this),
           coordinates,
         );
       },

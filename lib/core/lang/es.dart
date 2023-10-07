@@ -66,5 +66,15 @@ class Es {
         Messages.addMoreImgs: 'Añadir más',
         Messages.uploading: 'Subiendo reporte',
         Messages.uploadFinished: 'Reporte publicado',
+        Messages.myReports: 'Mis reportes',
+        Messages.deleteReportTit: '¿Eliminar reporte?',
+        Messages.deleteReportCont:
+            '¿Está seguro de eliminar el reporte? Esto eliminará el reporte permanentemente y no se podra recuperar.',
+        Messages.confirm: 'Confirmar',
+        Messages.cancel: 'Cancel',
+        Messages.emailVerification:
+            'Revisa tu correo para verificar tu cuenta.',
+        Messages.modify: 'Modificar',
+        Messages.areYouSure: '¿Estas seguro?',
       };
 }

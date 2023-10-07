@@ -104,7 +104,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             transition: Transition.downToUp,
                             duration: const Duration(milliseconds: 400),
                           );
-                          controller.disposeControllers();
+                          controller.resetControllers();
                         },
                         child: Text(
                           Messages.loginSec2.tr,

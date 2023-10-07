@@ -27,6 +27,8 @@ class MapController extends GetxController {
 
   var _opened = false;
 
+  GoogleMapController? googleMapController;
+
   final _deviceLocation = const LatLng(0, 0).obs;
   LatLng get deviceLocation => _deviceLocation.value;
 
@@ -56,14 +58,16 @@ class MapController extends GetxController {
 
   var reportImages = <File>[].obs;
 
+  final _showActiveReportsDialog = false.obs;
+  bool get showActiveReportsDialog => _showActiveReportsDialog.value;
+  set showActiveReportsDialog(bool value) =>
+      _showActiveReportsDialog.value = value;
+
   @override
   void onReady() async {
     super.onReady();
     await _activateInitialCameraPosition();
     _navActions = [
-      () => '',
-      () => '',
-      () => '',
       () async {
         try {
           _isLoadingPubScreen(true);
@@ -74,43 +78,73 @@ class MapController extends GetxController {
           } else {
             _currentLocationAdress.value = await _getCurrentLocationAdress();
             _selectedtLocationAdress.value = _currentLocationAdress.value;
+            _locationAdress.value = _selectedtLocationAdress.value;
             reportLocationController = TextEditingController(
               text: _selectedtLocationAdress.value,
             );
             _opened = true;
           }
-          _bottomSheet(PublicationScreen());
+          bottomSheet(PublicationScreen());
         } finally {
           _isLoadingPubScreen(false);
         }
       },
-      () => _bottomSheet(ProfileScreen()),
+      () => _showActiveReportsDialog(!_showActiveReportsDialog.value),
+      () => bottomSheet(ProfileScreen()),
     ];
     DatabaseRepository.getDataUpdate('reports', (event) {
       final data = event.snapshot.value;
 
-      final reportsData = (data as Map).cast<String, dynamic>();
+      final reportsData = (data as Map?)?.cast<String, dynamic>();
 
-      reports = reportsData.entries
-          .map((e) {
-            final report = e.value as Map;
-            return ReportInfoModel.fromJson(report);
-          })
-          .toList()
-          .obs;
+      if (reportsData == null) return;
+
+      reports.value = reportsData.entries.map((e) {
+        final report = e.value;
+        return ReportInfoModel.fromJson(report);
+      }).toList();
+
+      if (_notLoaded) {
+        searchReports.value = [...reports];
+        _notLoaded = false;
+      }
+
+      searchReports.refresh();
+      reports.refresh();
+      update();
     });
   }
 
+  var _notLoaded = true;
+
   var reports = <ReportInfoModel>[].obs;
 
+  var activeReportTypes = [
+    ReportType.hole,
+    ReportType.roadWork,
+    ReportType.dangerZone,
+  ].obs;
+
+  void handleReportTypes(ReportType type) {
+    if (activeReportTypes.contains(type)) {
+      activeReportTypes.remove(type);
+    } else {
+      activeReportTypes.add(type);
+    }
+    activeReportTypes.refresh();
+    update();
+  }
+
   Future<void> _activateInitialCameraPosition() async {
-    _isLoading(true);
+    await Future.delayed(Duration.zero);
+    _isLoading.value = true;
     var serviceEnabled = await _location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await _location.requestService();
       if (!serviceEnabled) {
         _deviceLocation.value = const LatLng(0, 0);
-        _isLoading(false);
+        _isLoading.value = false;
+        update();
         return;
       }
     }
@@ -120,7 +154,10 @@ class MapController extends GetxController {
       permissionGranted = await _location.requestPermission();
       if (permissionGranted != PermissionStatus.granted) {
         _deviceLocation.value = const LatLng(0, 0);
-        _isLoading(false);
+        _isLoading.value = false;
+
+        update();
+
         return;
       }
     }
@@ -132,7 +169,9 @@ class MapController extends GetxController {
     );
     _reportLocation = Rx<LatLng>(_deviceLocation.value);
 
-    _isLoading(false);
+    _isLoading.value = false;
+    _isLoading.refresh();
+    update();
   }
 
   final _reportTypeIndex = 0.obs;
@@ -152,6 +191,12 @@ class MapController extends GetxController {
   final Rx<String?> _selectedtLocationAdress = ''.obs;
   String? get selectedLocationAdress => _selectedtLocationAdress.value;
 
+  final Rx<String?> _locationAdress = ''.obs;
+  String? get locationAdress => _locationAdress.value;
+
+  final Rx<String?> _locationName = ''.obs;
+  String? get locationName => _locationName.value;
+
   final _isSearchBarFocused = false.obs;
   bool get isSearchBarFocused => _isSearchBarFocused.value;
   set isSearchBarFocused(bool value) => _isSearchBarFocused.value = value;
@@ -159,8 +204,10 @@ class MapController extends GetxController {
   final Rx<String?> _currentLocationAdress = ''.obs;
   String? get currentLocationAdress => _currentLocationAdress.value;
 
-  void setReportLocation(String address, LatLng coords) {
-    _selectedtLocationAdress(address);
+  void setReportLocation(String address, LatLng coords, [String? name]) {
+    _selectedtLocationAdress(name ?? address);
+    _locationAdress(address);
+    _locationName(name ?? address);
     _reportLocation.value = coords;
     FocusScope.of(Get.context!).unfocus();
   }
@@ -197,20 +244,6 @@ class MapController extends GetxController {
     } finally {
       _isQueryLoading(false);
     }
-  }
-
-  void _bottomSheet(Widget content) {
-    showModalBottomSheet(
-      context: Get.context!,
-      builder: (context) => content,
-      isScrollControlled: true,
-      useRootNavigator: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(45),
-        ),
-      ),
-    );
   }
 
   late final List<void Function()> _navActions;
@@ -310,17 +343,11 @@ class MapController extends GetxController {
                 ),
           ),
           content: instance.isLoadingUpload
-              ? const SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : Image.asset(
+              ? Image.asset(
                   Constants.loadingGif,
                   height: 200,
-                ),
+                )
+              : const Icon(Icons.check_circle_outline),
         ),
       ),
     );
@@ -331,7 +358,7 @@ class MapController extends GetxController {
 
     final id = const Uuid().v1();
 
-    if (_selectedtLocationAdress.value!.isEmpty ||
+    if (_locationAdress.value!.isEmpty ||
         _reportLocation.value == null ||
         reportImages.isEmpty) {
       _isLoadingUpload(false);
@@ -341,8 +368,11 @@ class MapController extends GetxController {
     _loadingDialog();
 
     final report = ReportInfoModel(
-      description: reportDesciptionController.text,
-      address: _selectedtLocationAdress.value!,
+      description: reportDesciptionController.text.trim(),
+      name: _locationName.value!.isEmpty
+          ? _locationAdress.value!.trim()
+          : _locationName.value!.trim(),
+      address: _locationAdress.value!.trim(),
       type: _reportType,
       coordinates: _reportLocation.value!,
       id: id,
@@ -365,4 +395,59 @@ class MapController extends GetxController {
     Get.back();
     _resetFields();
   }
+
+  Future<List<String>> getReportImages(String reportId) async {
+    final images = await _storageRepo.getListedFiles('avidence/$reportId');
+    final imageUrls = <String>[];
+
+    for (var imgURL in images) {
+      imageUrls.add(await imgURL.getDownloadURL());
+    }
+
+    return imageUrls;
+  }
+
+  final reportsBarController = TextEditingController();
+
+  final _isReportsBarFocused = false.obs;
+  bool get isReportsBarFocused => _isReportsBarFocused.value;
+  set isReportsBarFocused(bool value) {
+    _isReportsBarFocused.value = value;
+    update();
+  }
+
+  var searchReports = <ReportInfoModel>[].obs;
+
+  void searchReport(String query) {
+    searchReports.value = reports
+        .where((report) => report.name.toLowerCase().contains(query))
+        .toList();
+    searchReports.refresh();
+    update();
+  }
+
+  Future<void> deleteReport(ReportInfoModel report) async {
+    await DatabaseRepository.deleteData('reports/${report.id}');
+    final images = await _storageRepo.getListedFiles('avidence/${report.id}');
+
+    for (var file in images) {
+      file.delete();
+    }
+
+    update();
+  }
+}
+
+void bottomSheet(Widget content) {
+  showModalBottomSheet(
+    context: Get.context!,
+    builder: (context) => content,
+    isScrollControlled: true,
+    useRootNavigator: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(45),
+      ),
+    ),
+  );
 }

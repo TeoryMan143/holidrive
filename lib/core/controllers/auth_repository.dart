@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:holidrive/core/constants.dart';
 import 'package:holidrive/features/Authentication/models/user_model.dart';
+import 'package:holidrive/features/Authentication/presentation/email_verify.dart';
 import 'package:holidrive/features/Authentication/presentation/sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -26,8 +28,11 @@ class AuthRepository extends GetxController {
     _firebaseUser.bindStream(_auth.userChanges());
     if (_firebaseUser.value == null) {
       Get.offAll(() => const SignInScreen());
+    } else if (!_firebaseUser.value!.emailVerified) {
+      _firebaseUser.value!.sendEmailVerification();
+      Get.off(() => const EmailVerifyScreen());
     } else {
-      Get.offAll(() => MapScreen());
+      Get.offAll(() => const MapScreen());
     }
     super.onReady();
   }
@@ -36,10 +41,9 @@ class AuthRepository extends GetxController {
     String fullName,
     String email,
     String password,
-    int number,
   ) async {
     try {
-      final userData = await getUserDataWithNumber(number);
+      final userData = await getUserDataWithEmail(email);
 
       if (userData != null) {
         errorDialog(
@@ -57,7 +61,6 @@ class AuthRepository extends GetxController {
         uid: _firebaseUser.value!.uid,
         fullName: fullName,
         email: email,
-        number: number,
       );
       await _store.collection('Users').add(user.toJson());
     } on FirebaseAuthException catch (e) {
@@ -121,8 +124,9 @@ class AuthRepository extends GetxController {
       if (userData == null) {
         await _store.collection('Users').add(user.toJson());
       }
-    } catch (e) {
-      debugPrint('FirebaseAuth expeption $e');
+    } on PlatformException catch (e) {
+      debugPrint(
+          'FirebaseAuth expeption code: ${e.code} message: ${e.message}');
     }
   }
 
@@ -152,16 +156,32 @@ class AuthRepository extends GetxController {
     return userData;
   }
 
-  Future<UserModel?> getUserDataWithNumber(int number) async {
+  Future<void> updateUserData({
+    required String field,
+    required String value,
+  }) async {
     final query = await _db
         .collection('Users')
         .where(
-          'number',
-          isEqualTo: number,
+          'uid',
+          isEqualTo: _auth.currentUser?.uid,
         )
         .get();
+    final userQuery = query.docs.singleOrNull;
     final userData =
-        query.docs.map((e) => UserModel.fromJson(e.data())).singleOrNull;
-    return userData;
+        userQuery == null ? null : UserModel.fromJson(userQuery.data());
+
+    if (userData == null) {
+      printError(info: 'User not found');
+      return;
+    }
+
+    if (userData.email == value) {
+      return;
+    }
+
+    userQuery!.reference.update({
+      field: value,
+    });
   }
 }

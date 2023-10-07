@@ -97,7 +97,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fullName: controller.name.text.trim(),
                           email: controller.email.text.trim(),
                           password: controller.password.text.trim(),
-                          number: int.parse(controller.number.text.trim()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -134,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             transition: Transition.downToUp,
                             duration: const Duration(milliseconds: 400),
                           );
-                          controller.disposeControllers();
+                          controller.resetControllers();
                         },
                         child: Text(
                           Messages.signupSec2.tr,

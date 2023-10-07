@@ -29,6 +29,7 @@ abstract class Themes {
       surface: Color(0xffFF914D),
       onSurface: Color(0xFFFFF6EC),
       tertiary: Color(0xff515058),
+      onTertiary: Color(0xffFFBD59),
     ),
     fontFamily: 'Catamaran',
     cardTheme: const CardTheme(
@@ -75,6 +76,7 @@ abstract class Themes {
       surface: Color(0xffFF914D),
       onSurface: Color(0xff2E2435),
       tertiary: Color(0xffFEF3E6),
+      onTertiary: Color(0xffFFBD59),
     ),
     fontFamily: 'Catamaran',
     cardTheme: const CardTheme(

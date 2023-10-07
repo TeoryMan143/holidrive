@@ -24,24 +24,6 @@ class GeocodingAPI {
     return await NetworkRepository.fetch(uri);
   }
 
-  static Future<Map<String, dynamic>?> getLocationAddressFromQuery(
-    String query,
-  ) async {
-    final uri = Uri.https(
-      'maps.googleapis.com',
-      'maps/api/geocode/json',
-      {
-        'address': query,
-        'key': key,
-        'language': Localizations.localeOf(Get.context!) == const Locale('es')
-            ? 'es'
-            : 'en',
-        'region': 'co',
-      },
-    );
-    return await NetworkRepository.fetch(uri);
-  }
-
   static Future<Map<String, dynamic>?> getLocationPlacesFromQuery(
     String query,
   ) async {

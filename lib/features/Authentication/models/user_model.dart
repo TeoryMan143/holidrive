@@ -8,7 +8,6 @@ part 'user_model.g.dart';
 class UserModel {
   final String fullName, email, uid;
   final String? profilePicture;
-  final int? number;
   final bool mod;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -18,7 +17,6 @@ class UserModel {
     required this.fullName,
     required this.email,
     this.mod = false,
-    this.number,
     required this.uid,
     this.profilePicture,
   });

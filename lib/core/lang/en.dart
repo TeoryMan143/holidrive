@@ -66,5 +66,14 @@ class En {
         Messages.addMoreImgs: 'Add more',
         Messages.uploading: 'Uploading report',
         Messages.uploadFinished: 'Successfully uploaded',
+        Messages.myReports: 'My reports',
+        Messages.deleteReportTit: 'Delete report?',
+        Messages.deleteReportCont:
+            'Are you sure to delete the report? This will delete the report permanently and may not be recovered',
+        Messages.confirm: 'Confirm',
+        Messages.cancel: 'Cancel',
+        Messages.emailVerification: 'Check your email to verify your account.',
+        Messages.modify: 'Modify',
+        Messages.areYouSure: 'Are you sure?',
       };
 }

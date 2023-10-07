@@ -3,22 +3,21 @@ import 'package:clippy_flutter/clippy_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:holidrive/core/constants.dart';
+import 'package:holidrive/core/controllers/storage_controller.dart';
 import 'package:holidrive/features/Map/models/report_info_model.dart';
+import 'package:holidrive/features/Map/presentation/report_screen.dart';
+import 'package:holidrive/features/Map/controller/use_cases.dart';
 
 class ReportPreview extends StatelessWidget {
-  const ReportPreview({
+  ReportPreview(
+    this.reportInfo, {
     super.key,
-    required this.displayImage,
-    required this.address,
-    required this.description,
-    required this.type,
   });
 
-  final String displayImage, address, description;
-  final ReportType type;
+  final ReportInfoModel reportInfo;
 
   String _getHintIcon() {
-    switch (type) {
+    switch (reportInfo.type) {
       case ReportType.hole:
         return Constants.holeIcon;
       case ReportType.roadWork:
@@ -29,7 +28,7 @@ class ReportPreview extends StatelessWidget {
   }
 
   String _getHintText() {
-    switch (type) {
+    switch (reportInfo.type) {
       case ReportType.hole:
         return Messages.holeHint.tr;
       case ReportType.roadWork:
@@ -38,6 +37,8 @@ class ReportPreview extends StatelessWidget {
         return Messages.dangerHint.tr;
     }
   }
+
+  final _storageInst = StorageRepository.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -63,11 +64,24 @@ class ReportPreview extends StatelessWidget {
                         const BorderRadius.vertical(top: Radius.circular(10)),
                     child: ColoredBox(
                       color: Theme.of(context).colorScheme.surface,
-                      child: Image.network(
-                        displayImage,
-                        height: 100,
-                        width: 300,
-                        fit: BoxFit.cover,
+                      child: FutureBuilder<String>(
+                        future: _storageInst.getImageUrl(
+                          'avidence/${reportInfo.id}/0evi_800x800',
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          return Image.network(
+                            snapshot.data!,
+                            height: 100,
+                            width: 300,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
                   ),
@@ -79,27 +93,38 @@ class ReportPreview extends StatelessWidget {
                       ),
                     ),
                     width: 300,
-                    height: 80,
+                    height: 90,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            address,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 20,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                child: Text(
+                                  reportInfo.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall
+                                      ?.copyWith(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 17,
+                                      ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
+                              ),
+                              Text(
+                                '${reportInfo.time.day}-${reportInfo.time.month}-${reportInfo.time.year}',
+                              )
+                            ],
                           ),
-                          Text.rich(
-                            TextSpan(
-                              text: description,
-                            ),
+                          Text(
+                            reportInfo.description,
                             overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onBackground,
                             ),
@@ -112,47 +137,54 @@ class ReportPreview extends StatelessWidget {
               ),
             ),
             Positioned(
-              left: 10,
+              left: 5,
               top: -25,
-              child: Row(
-                children: [
-                  Card(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                    ),
-                    color: Theme.of(context).colorScheme.background,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 12),
-                      child: Row(
-                        children: <Widget>[
-                          SvgPicture.asset(_getHintIcon(), height: 24),
-                          const SizedBox(width: 10),
-                          Text(
-                            _getHintText(),
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+              child: Card(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                ),
+                color: Theme.of(context).colorScheme.background,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+                  child: Row(
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        _getHintIcon(),
+                        height: 24,
+                        colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.onBackground,
+                          BlendMode.srcIn,
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 5),
+                      Text(
+                        _getHintText(),
+                        style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed: () => '',
-                    icon: const Icon(Icons.open_in_new),
-                    label: Text(Messages.seeMore.tr),
-                    style: ElevatedButton.styleFrom(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
+            Positioned(
+              bottom: 2,
+              right: 8,
+              child: ElevatedButton.icon(
+                onPressed: () => bottomSheet(ReportScreen(reportInfo)),
+                icon: const Icon(Icons.open_in_new),
+                label: Text(Messages.seeMore.tr),
+                style: ElevatedButton.styleFrom(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
         Triangle.isosceles(
@@ -162,7 +194,7 @@ class ReportPreview extends StatelessWidget {
             height: 40,
             width: 30,
           ),
-        )
+        ),
       ],
     );
   }

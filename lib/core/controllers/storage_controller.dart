@@ -23,4 +23,39 @@ class StorageRepository extends GetxController {
       debugPrint('Failed with expeption ${e.message}, code ${e.code}');
     }
   }
+
+  Future<List<Reference>> getListedFiles(String path) async {
+    try {
+      final result = await _storageRef.child(path).listAll();
+      final children = result.items;
+      return children;
+    } on FirebaseException catch (e) {
+      debugPrint('Failed with expeption ${e.message}, code ${e.code}');
+      return [];
+    }
+  }
+
+  Future<String> getImageUrl(String path) async {
+    try {
+      final imgURL = await _storageRef.child(path).getDownloadURL();
+      return imgURL;
+    } on FirebaseException catch (e) {
+      debugPrint('Failed with expeption ${e.message}, code ${e.code}');
+      return '';
+    }
+  }
+
+  Future<String> getImageUrlFromReference(Reference ref) async {
+    try {
+      final imgURL = await ref.getDownloadURL();
+      return imgURL;
+    } on FirebaseException catch (e) {
+      debugPrint('Failed with expeption ${e.message}, code ${e.code}');
+      return '';
+    }
+  }
+
+  Future<void> deleteFiles(String path) async {
+    _storageRef.child(path).delete();
+  }
 }

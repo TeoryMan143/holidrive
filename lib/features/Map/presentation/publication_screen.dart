@@ -96,7 +96,7 @@ class PublicationScreen extends StatelessWidget {
                               color: Theme.of(context).colorScheme.onBackground,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
             ),
@@ -271,20 +271,20 @@ class PublicationScreen extends StatelessWidget {
                                                             onPressed: () =>
                                                                 _mapController
                                                                     .deleteSlectedImage(
-                                                                        image),
-                                                            icon: const Icon(
-                                                              Icons.remove,
+                                                              image,
                                                             ),
-                                                            style: IconButton
-                                                                .styleFrom(
-                                                              backgroundColor:
-                                                                  Colors.grey,
+                                                            icon: Icon(
+                                                              Icons.delete,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .primary,
                                                             ),
                                                           ),
-                                                        )
+                                                        ),
                                                       ],
                                                     ),
-                                                  )
+                                                  ),
                                               ],
                                             ),
                                             const SizedBox(height: 15),
@@ -422,19 +422,12 @@ class PublicationScreen extends StatelessWidget {
                                             );
                                             return GestureDetector(
                                               onTap: () {
-                                                if (name == null) {
-                                                  _mapController
-                                                      .setReportLocation(
-                                                    address,
-                                                    coords,
-                                                  );
-                                                } else {
-                                                  _mapController
-                                                      .setReportLocation(
-                                                    name,
-                                                    coords,
-                                                  );
-                                                }
+                                                _mapController
+                                                    .setReportLocation(
+                                                  address,
+                                                  coords,
+                                                  name,
+                                                );
                                               },
                                               child: ListTile(
                                                 leading: Icon(

@@ -13,4 +13,8 @@ class DatabaseRepository {
   ) {
     _dbInst.ref(path).onValue.listen(onChange);
   }
+
+  static Future<void> deleteData(String path) async {
+    await _dbInst.ref(path).remove();
+  }
 }

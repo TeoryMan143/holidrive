@@ -73,4 +73,12 @@ abstract class Messages {
   static const addMoreImgs = 'addMoreImgs';
   static const uploading = 'uploading';
   static const uploadFinished = 'uploadFinished';
+  static const myReports = 'myReports';
+  static const deleteReportTit = 'deleteReportTit';
+  static const deleteReportCont = 'deleteReportCont';
+  static const confirm = 'confirm';
+  static const cancel = 'cancel';
+  static const emailVerification = 'emailVerification';
+  static const modify = 'modify';
+  static const areYouSure = 'areYouSure';
 }

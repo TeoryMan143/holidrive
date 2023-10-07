@@ -15,7 +15,7 @@ class CustomSearchBar extends StatelessWidget {
   final void Function(String value)? onChanged;
   final TextEditingController? controller;
   final bool locator;
-  final void Function()? onFocus;
+  final void Function(bool hasFocus)? onFocus;
 
   final _mapController = Get.put(MapController());
 
@@ -29,16 +29,13 @@ class CustomSearchBar extends StatelessWidget {
             _mapController.isSearchBarFocused = hasFocus;
 
             if (onFocus != null) {
-              onFocus!();
+              onFocus!(hasFocus);
             }
-            if (locator &&
-                !hasFocus &&
-                _mapController.reportLocation !=
-                    _mapController.deviceLocation) {
+            if (locator && !hasFocus) {
               _mapController.reportLocationController.text =
                   _mapController.selectedLocationAdress!;
             }
-            if (hasFocus) {
+            if (locator && hasFocus) {
               _mapController.reportLocationController.text = '';
             }
           },
@@ -69,7 +66,8 @@ class CustomSearchBar extends StatelessWidget {
                     : Text(
                         Messages.curretLocationLabel.tr,
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
           ),
         ),
